@@ -40,5 +40,5 @@ def workdir_view(request):
     result = []
     for i in dir_list:
         result.append(i)
-    return result
+    return HttpResponse(', '.join(result))
     #raise NotImplemented
