@@ -10,7 +10,8 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    search_fields = ['title', 'description']
     # при необходимости добавьте параметры фильтрации
 
 
@@ -19,6 +20,6 @@ class StockViewSet(ModelViewSet):
     serializer_class = StockSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ['products']
-    search_fields = ['products__id', 'products__title', 'products__description']
+    search_fields = ['products__id']
 
     # при необходимости добавьте параметры фильтрации
