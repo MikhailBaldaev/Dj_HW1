@@ -99,7 +99,7 @@ DATABASES = {
         'NAME': 'netology_classified_ads',
         'HOST': '127.0.0.1',
         'USER': 'postgres',
-        'PASSWORD': 'marina1980',
+        'PASSWORD': '',
 
     }
 }

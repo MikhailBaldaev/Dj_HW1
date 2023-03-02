@@ -40,16 +40,12 @@ class AdvertisementSerializer(serializers.ModelSerializer):
 
         validated_data = super().validate(data)
         user = self.context['request'].user
-        ads = Advertisement.objects.filter(creator=user).filter(status='OPEN').all()
+        ads = Advertisement.objects.filter(creator=user, status='OPEN').all()
 
-        if len(ads) >= 10 and validated_data['status'] == 'OPEN':
+        if ads.count() >= 10 and (validated_data.get('status') == 'OPEN' or validated_data.get('status') is None):
             raise ValidationError('Too much opened ads. Maximum quantity is 10!')
 
         return data
-
-    def destroy(self, validated_data):
-        validated_data["creator"] = self.context["request"].user
-        return super().perform_destroy(validated_data)
 
 
 class FavouriteSerializer(serializers.ModelSerializer):
@@ -57,4 +53,3 @@ class FavouriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Favourite
         fields = ('id', 'user', 'ad')
-
