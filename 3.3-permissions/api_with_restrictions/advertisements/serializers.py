@@ -40,9 +40,9 @@ class AdvertisementSerializer(serializers.ModelSerializer):
 
         validated_data = super().validate(data)
         user = self.context['request'].user
-        ads = Advertisement.objects.filter(creator=user, status='OPEN').all()
 
-        if ads.count() >= 10 and (validated_data.get('status') == 'OPEN' or validated_data.get('status') is None):
+        if Advertisement.objects.filter(creator=user, status='OPEN').count() >= 10 and \
+                (validated_data.get('status') == 'OPEN' or validated_data.get('status') is None):
             raise ValidationError('Too much opened ads. Maximum quantity is 10!')
 
         return data
