@@ -1,4 +1,3 @@
-from django.db.models import Q
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
@@ -20,11 +19,9 @@ class AdvertisementViewSet(ModelViewSet):
 
     queryset = Advertisement.objects.all()
     serializer_class = AdvertisementSerializer
-    permission_classes = [IsOwnerOrReadOnly]
     throttle_classes = [AnonRateThrottle, UserRateThrottle]
     filter_backends = [DjangoFilterBackend]
-    filter_class = [AdvertisementFilter]
-    filterset_fields = ['status', 'created_at', 'creator__id']
+    filterset_class = AdvertisementFilter
 
 
     def get_permissions(self):
@@ -65,6 +62,7 @@ class AdvertisementViewSet(ModelViewSet):
     @action(detail=False, methods=['GET'])
     def favs(self, request):
         user = request.user
-        favs = Favourite.objects.filter(user=user).all()
-        serializer = FavouriteSerializer(favs, many=True)
+        user_favorites = Favourite.objects.filter(user=user)
+        advertisements = [favorite.ad for favorite in user_favorites]
+        serializer = AdvertisementSerializer(advertisements, many=True)
         return Response(serializer.data)
